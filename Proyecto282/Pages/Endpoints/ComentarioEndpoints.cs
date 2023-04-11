@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.OpenApi;
 using Proyecto282.Models;
 namespace Proyecto282.Pages.Endpoints;
 
@@ -7,13 +8,14 @@ public static class ComentarioEndpoints
 {
     public static void MapComentarioEndpoints (this IEndpointRouteBuilder routes)
     {
-        var group = routes.MapGroup("/api/Comentario");
+        var group = routes.MapGroup("/api/Comentario").WithTags(nameof(Comentario));
 
         group.MapGet("/", async (Proyecto282Context db) =>
         {
             return await db.Comentarios.ToListAsync();
         })
-        .WithName("GetAllComentarios");
+        .WithName("GetAllComentarios")
+        .WithOpenApi();
 
         group.MapGet("/{id}", async Task<Results<Ok<Comentario>, NotFound>> (int idcomentario, Proyecto282Context db) =>
         {
@@ -23,7 +25,8 @@ public static class ComentarioEndpoints
                     ? TypedResults.Ok(model)
                     : TypedResults.NotFound();
         })
-        .WithName("GetComentarioById");
+        .WithName("GetComentarioById")
+        .WithOpenApi();
 
         group.MapPut("/{id}", async Task<Results<Ok, NotFound>> (int idcomentario, Comentario comentario, Proyecto282Context db) =>
         {
@@ -40,7 +43,8 @@ public static class ComentarioEndpoints
 
             return affected == 1 ? TypedResults.Ok() : TypedResults.NotFound();
         })
-        .WithName("UpdateComentario");
+        .WithName("UpdateComentario")
+        .WithOpenApi();
 
         group.MapPost("/", async (Comentario comentario, Proyecto282Context db) =>
         {
@@ -48,7 +52,8 @@ public static class ComentarioEndpoints
             await db.SaveChangesAsync();
             return TypedResults.Created($"/api/Comentario/{comentario.IdComentario}",comentario);
         })
-        .WithName("CreateComentario");
+        .WithName("CreateComentario")
+        .WithOpenApi();
 
         group.MapDelete("/{id}", async Task<Results<Ok, NotFound>> (int idcomentario, Proyecto282Context db) =>
         {
@@ -58,6 +63,7 @@ public static class ComentarioEndpoints
 
             return affected == 1 ? TypedResults.Ok() : TypedResults.NotFound();
         })
-        .WithName("DeleteComentario");
+        .WithName("DeleteComentario")
+        .WithOpenApi();
     }
 }

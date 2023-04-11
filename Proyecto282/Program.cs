@@ -53,8 +53,6 @@ app.MapAsistenciaEndpoints();
 
 app.MapCertificadoEndpoints();
 
-app.MapComentarioEndpoints();
-
 app.MapEventoEndpoints();
 
 app.MapHorarioExposicionEndpoints();
@@ -65,11 +63,13 @@ app.MapInscripcionEndpoints();
 
 app.MapMaterialEndpoints();
 
-app.MapRecursoEndpoints();
-
 app.MapReservaEndpoints();
 
 app.MapUsuarioEndpoints();
+
+app.MapComentarioEndpoints();
+
+app.MapRecursoEndpoints();
 
 
 app.Run();
