@@ -1,0 +1,180 @@
+﻿-- Creación de la tabla USUARIO
+CREATE TABLE USUARIO (
+    id_usuario INT PRIMARY KEY,
+    nombre NVARCHAR(255),
+    correo_electronico NVARCHAR(255),
+    tipo_usuario NVARCHAR(50),
+    contrasena NVARCHAR(255)
+);
+
+-- Creación de la tabla EVENTO
+CREATE TABLE EVENTO (
+    id_evento INT PRIMARY KEY,
+    nombre_evento NVARCHAR(255),
+    fecha DATE,
+    hora TIME,
+    lugar NVARCHAR(255),
+    tipo_evento NVARCHAR(50),
+    publico NVARCHAR(3)
+);
+
+-- Creación de la tabla INSCRIPCION
+CREATE TABLE INSCRIPCION (
+    id_inscripcion INT PRIMARY KEY,
+    id_usuario INT FOREIGN KEY REFERENCES USUARIO(id_usuario),
+    id_evento INT FOREIGN KEY REFERENCES EVENTO(id_evento),
+    estatus NVARCHAR(50)
+);
+
+-- Creación de la tabla COMENTARIO
+CREATE TABLE COMENTARIO (
+    id_comentario INT PRIMARY KEY,
+    id_usuario INT FOREIGN KEY REFERENCES USUARIO(id_usuario),
+    id_evento INT FOREIGN KEY REFERENCES EVENTO(id_evento),
+    comentario NVARCHAR(MAX),
+    id_expositor_responde INT FOREIGN KEY REFERENCES USUARIO(id_usuario),
+    fecha_comentario DATETIME
+);
+
+-- Creación de la tabla MATERIAL
+CREATE TABLE MATERIAL (
+    id_material INT PRIMARY KEY,
+    id_evento INT FOREIGN KEY REFERENCES EVENTO(id_evento),
+    nombre_material NVARCHAR(255),
+    descripcion NVARCHAR(MAX),
+    disponible NVARCHAR(3),
+    id_expositor_sube INT FOREIGN KEY REFERENCES USUARIO(id_usuario)
+);
+
+-- Creación de la tabla INFRAESTRUCTURA
+CREATE TABLE INFRAESTRUCTURA (
+    id_infraestructura INT PRIMARY KEY,
+    id_evento INT FOREIGN KEY REFERENCES EVENTO(id_evento),
+    nombre NVARCHAR(255),
+    tipo NVARCHAR(50),
+    capacidad INT
+);
+
+-- Creación de la tabla ASISTENCIA
+CREATE TABLE ASISTENCIA (
+    id_asistencia INT PRIMARY KEY,
+    id_usuario INT FOREIGN KEY REFERENCES USUARIO(id_usuario),
+    id_evento INT FOREIGN KEY REFERENCES EVENTO(id_evento),
+    fecha DATE,
+    hora TIME
+);
+
+-- Creación de la tabla CERTIFICADO
+CREATE TABLE CERTIFICADO (
+    id_certificado INT PRIMARY KEY,
+    id_usuario INT FOREIGN KEY REFERENCES USUARIO(id_usuario),
+    id_evento INT FOREIGN KEY REFERENCES EVENTO(id_evento),
+    fecha_emision DATE,
+    nombre_evento NVARCHAR(255)
+);
+
+-- Creación de la tabla AMBIENTE
+CREATE TABLE AMBIENTE (
+    id_ambiente INT PRIMARY KEY,
+    id_evento INT FOREIGN KEY REFERENCES EVENTO(id_evento),
+    nombre_ambiente NVARCHAR(255)
+);
+
+-- Creación de la tabla RECURSO
+CREATE TABLE RECURSO (
+    id_recurso INT PRIMARY KEY,
+    id_ambiente INT FOREIGN KEY REFERENCES AMBIENTE(id_ambiente),
+    nombre_recurso NVARCHAR(255),
+    descripcion_recurso NVARCHAR(MAX)
+);
+
+-- Creación de la tabla RESERVA
+CREATE TABLE RESERVA (
+    id_reserva INT PRIMARY KEY,
+    id_usuario INT FOREIGN KEY REFERENCES USUARIO(id_usuario),
+    id_ambiente INT FOREIGN KEY REFERENCES AMBIENTE(id_ambiente),
+    fecha_reserva DATE,
+    hora_inicio TIME,
+    hora_fin TIME
+);
+
+-- Creación de la tabla HORARIO_EXPOSICION
+CREATE TABLE HORARIO_EXPOSICION (
+  id_horario_exposicion INT PRIMARY KEY,
+  id_evento INT,
+  id_ambiente INT,
+  id_expositor INT,
+  fecha_exposicion DATE,
+  hora_inicio TIME,
+  hora_fin TIME,
+  FOREIGN KEY (id_evento) REFERENCES EVENTO(id_evento),
+  FOREIGN KEY (id_ambiente) REFERENCES AMBIENTE(id_ambiente),
+  FOREIGN KEY (id_expositor) REFERENCES USUARIO(id_usuario)
+);
+
+
+
+-- Inserción de datos en la tabla USUARIO
+INSERT INTO USUARIO (id_usuario, nombre, correo_electronico, tipo_usuario, contrasena)
+VALUES (1, 'Juan Pérez', 'juan.perez@example.com', 'Administrador', 'contrasena1'),
+(2, 'María García', 'maria.garcia@example.com', 'Usuario', 'contrasena2'),
+(3, 'Carlos López', 'carlos.lopez@example.com', 'Usuario', 'contrasena3'),
+(4, 'Ana Rodríguez', 'ana.rodriguez@example.com', 'Usuario', 'contrasena4');
+
+-- Inserción de datos en la tabla EVENTO
+INSERT INTO EVENTO (id_evento, nombre_evento, fecha, hora, lugar, tipo_evento, publico)
+VALUES (1, 'Conferencia de Tecnología', '2023-05-15', '15:00:00', 'Salón A', 'Conferencia', 'Sí'),
+(2, 'Taller de Diseño Gráfico', '2023-05-18', '10:30:00', 'Salón B', 'Taller', 'No'),
+(3, 'Seminario de Marketing Digital', '2023-05-20', '14:00:00', 'Auditorio Principal', 'Seminario', 'Sí');
+
+-- Inserción de datos en la tabla INSCRIPCION
+INSERT INTO INSCRIPCION (id_inscripcion, id_usuario, id_evento, estatus)
+VALUES (1, 2, 1, 'Aprobada'),
+(2, 3, 1, 'Pendiente'),
+(3, 1, 2, 'Aprobada'),
+(4, 4, 3, 'Pendiente');
+
+-- Inserción de datos en la tabla COMENTARIO
+INSERT INTO COMENTARIO (id_comentario, id_usuario, id_evento, comentario, id_expositor_responde, fecha_comentario)
+VALUES (1, 1, 1, 'Excelente conferencia. Muy informativa.', NULL, '2023-05-15 16:30:00'),
+(2, 3, 2, 'Me gustaría participar en este taller.', NULL, '2023-05-18 12:45:00'),
+(3, 2, 1, '¿Habrá alguna actividad práctica?', 1, '2023-05-15 17:15:00');
+
+-- Inserción de datos en la tabla MATERIAL
+INSERT INTO MATERIAL (id_material, id_evento, nombre_material, descripcion, disponible, id_expositor_sube)
+VALUES (1, 1, 'Presentación de diapositivas', 'Archivo de PowerPoint con la presentación de la conferencia.', 'Sí', 1),
+(2, 2, 'Material de dibujo', 'Lápices, papel y otros materiales para el taller de diseño gráfico.', 'Sí', 3),
+(3, 3, 'Folletos de marketing digital', 'Folletos informativos sobre el seminario de marketing digital.', 'No', NULL);
+
+
+-- Inserción de datos en la tabla INFRAESTRUCTURA
+INSERT INTO INFRAESTRUCTURA (id_infraestructura, id_evento, nombre, tipo, capacidad)
+VALUES (1, 1, 'Equipo de sonido', 'Sonido', 100),
+(2, 2, 'Sillas', 'Mobiliario', 200),
+(3, 3, 'Iluminación', 'Luces', 50);
+
+-- Inserción de datos en la tabla ASISTENCIA
+INSERT INTO ASISTENCIA (id_asistencia, id_usuario, id_evento, fecha, hora)
+VALUES (1, 1, 1, '2023-04-10', '15:30:00'),
+(2, 2, 1, '2023-04-10', '15:30:00'),
+(3, 3, 2, '2023-04-11', '18:00:00');
+
+-- Inserción de datos en la tabla CERTIFICADO
+INSERT INTO CERTIFICADO (id_certificado, id_usuario, id_evento, fecha_emision, nombre_evento)
+VALUES (1, 1, 1, '2022-03-15', 'Evento de Desarrollo Web');
+
+-- Inserción de datos en la tabla AMBIENTE
+INSERT INTO AMBIENTE (id_ambiente, id_evento, nombre_ambiente)
+VALUES (1, 1, 'Sala Principal');
+
+-- Inserción de datos en la tabla RECURSO
+INSERT INTO RECURSO (id_recurso, id_ambiente, nombre_recurso, descripcion_recurso)
+VALUES (1, 1, 'Proyector', 'Proyector de alta definición para presentaciones');
+
+-- Inserción de datos en la tabla RESERVA
+INSERT INTO RESERVA (id_reserva, id_usuario, id_ambiente, fecha_reserva, hora_inicio, hora_fin)
+VALUES (1, 1, 1, '2023-04-15', '14:00:00', '16:00:00');
+
+-- Inserción de datos en la tabla HORARIO_EXPOSICION
+INSERT INTO HORARIO_EXPOSICION (id_horario_exposicion, id_evento, id_ambiente, id_expositor, fecha_exposicion, hora_inicio, hora_fin)
+VALUES (1, 1, 1, 2, '2023-04-20', '10:00:00', '11:30:00');
