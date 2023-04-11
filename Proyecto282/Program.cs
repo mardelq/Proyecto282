@@ -1,13 +1,19 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Proyecto282.Models;
+using Proyecto282.Pages.Controllers;
+using Proyecto282.Pages.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddControllers();
+//builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddDbContext<Proyecto282Context>(options =>
+    //options.UseSqlServer(builder.Configuration.GetConnectionString("Proyecto282Context")));
+    options.UseSqlServer("Data Source=RAZER;Initial Catalog=Proyecto282;Integrated Security=True;TrustServerCertificate=True"));
 
 var app = builder.Build();
 
@@ -27,13 +33,43 @@ app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
 });
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+};
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
 
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+app.MapAmbienteEndpoints();
+
+app.MapAsistenciaEndpoints();
+
+app.MapCertificadoEndpoints();
+
+app.MapComentarioEndpoints();
+
+app.MapEventoEndpoints();
+
+app.MapHorarioExposicionEndpoints();
+
+app.MapInfraestructuraEndpoints();
+
+app.MapInscripcionEndpoints();
+
+app.MapMaterialEndpoints();
+
+app.MapRecursoEndpoints();
+
+app.MapReservaEndpoints();
+
+app.MapUsuarioEndpoints();
+
 
 app.Run();
